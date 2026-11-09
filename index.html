@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNAPPOP! ⚡ Studio by Gege's Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Library GIF Generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.3.2/gifshot.min.js"></script>
+</head>
+<body>
+
+  <!-- Canvas Background Bergerak (Doodle Monokrom) -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Funky Header dengan Dark Mode Toggle -->
+    <header class="studio-header">
+      <div class="header-top">
+        <div class="logo">SNAPPOP! <span>⚡</span></div>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
+          <span id="theme-icon">🌙</span>
+        </button>
+      </div>
+      <p class="subtitle">Serve your best chaos ★</p>
+    </header>
+
+    <main class="studio-workspace">
+      <!-- Live Camera Viewport -->
+      <section class="viewport-card">
+        <div class="camera-stage">
+          <video id="webcam" autoplay playsinline muted></video>
+          <div id="countdown-layer" class="countdown-overlay hidden">3</div>
+          <div class="flash-overlay" id="flash"></div>
+        </div>
+
+        <!-- Setting Jumlah Foto & Tombol Snap -->
+        <div class="pose-selector-row">
+          <label>Photo Count:</label>
+          <div class="pose-pills">
+            <button class="pose-btn" data-poses="2">2 Poses</button>
+            <button class="pose-btn active" data-poses="4">4 Poses</button>
+            <button class="pose-btn" data-poses="6">6 Poses</button>
+          </div>
+        </div>
+
+        <div class="controls-toolbar">
+          <button id="btn-snap" class="cute-btn primary">
+            <span id="snap-btn-text">✨ Take Photos (4x)</span>
+          </button>
+          <button id="btn-retake" class="cute-btn secondary">
+            <span>🔄</span> Clear All
+          </button>
+        </div>
+      </section>
+
+      <!-- Customization & Strip Preview -->
+      <section class="customization-card">
+        <h3>Design Your Photo Strip</h3>
+        
+        <!-- Layout Options -->
+        <div class="setting-group">
+          <label>Frame Layout</label>
+          <div class="layout-pills">
+            <button class="pill-btn active" data-layout="vertical">Strip</button>
+            <button class="pill-btn" data-layout="grid">Grid (2 Col)</button>
+            <button class="pill-btn" data-layout="polaroid">Wide Polaroid</button>
+          </div>
+        </div>
+
+        <!-- 8 Filter Options -->
+        <div class="setting-group">
+          <label>Choose Filter (8 Preset)</label>
+          <div class="filter-pills">
+            <button class="pill-btn active" data-filter="none">Normal</button>
+            <button class="pill-btn" data-filter="grayscale(100%) brightness(105%)">Soft B&W</button>
+            <button class="pill-btn" data-filter="sepia(40%) saturate(140%) contrast(95%)">Warm Vintage</button>
+            <button class="pill-btn" data-filter="contrast(110%) brightness(115%) saturate(130%)">Peach Pop</button>
+            <button class="pill-btn" data-filter="hue-rotate(280deg) saturate(180%) contrast(110%)">Dreamy Pink</button>
+            <button class="pill-btn" data-filter="hue-rotate(170deg) contrast(120%) brightness(110%)">Cyber Neon</button>
+            <button class="pill-btn" data-filter="contrast(140%) sepia(30%) hue-rotate(-20deg)">Retro Chrome</button>
+            <button class="pill-btn" data-filter="grayscale(100%) contrast(160%) brightness(85%)">Moody Noir</button>
+          </div>
+        </div>
+
+        <!-- Expanded Frame Colors (12 Options) -->
+        <div class="setting-group">
+          <label>Frame Color & Themes</label>
+          <div class="color-picker-row">
+            <button class="color-dot active" data-color="#ffffff" style="background: #ffffff;" title="Classic White"></button>
+            <button class="color-dot" data-color="#FFD6E5" style="background: #FFD6E5;" title="Baby Pink"></button>
+            <button class="color-dot" data-color="#D7F9F1" style="background: #D7F9F1;" title="Mint Green"></button>
+            <button class="color-dot" data-color="#FFF5BA" style="background: #FFF5BA;" title="Butter Yellow"></button>
+            <button class="color-dot" data-color="#E2D4F9" style="background: #E2D4F9;" title="Soft Lavender"></button>
+            <button class="color-dot" data-color="#FFC2A1" style="background: #FFC2A1;" title="Peach Sorbet"></button>
+            <button class="color-dot" data-color="#B8E1FF" style="background: #B8E1FF;" title="Sky Blue"></button>
+            <button class="color-dot" data-color="#FF94B9" style="background: #FF94B9;" title="Hot Pink"></button>
+            <button class="color-dot" data-color="#6C5CE7" style="background: #6C5CE7;" title="Electric Purple"></button>
+            <button class="color-dot" data-color="#70A1FF" style="background: #70A1FF;" title="Periwinkle"></button>
+            <button class="color-dot" data-color="#4A5568" style="background: #4A5568;" title="Slate Gray"></button>
+            <button class="color-dot" data-color="#2D2B30" style="background: #2D2B30;" title="Midnight Dark"></button>
+          </div>
+        </div>
+
+        <!-- Stamp Selection -->
+        <div class="setting-group">
+          <label>Add Stamp / Icon (Click to place, Drag to move)</label>
+          <div class="stamp-pills">
+            <button class="stamp-btn" data-stamp="💖">💖</button>
+            <button class="stamp-btn" data-stamp="🎀">🎀</button>
+            <button class="stamp-btn" data-stamp="🧸">🧸</button>
+            <button class="stamp-btn" data-stamp="🌸">🌸</button>
+            <button class="stamp-btn" data-stamp="✨">✨</button>
+            <button class="stamp-btn" data-stamp="🐱">🐱</button>
+            <button class="stamp-btn" data-stamp="⭐">⭐</button>
+            <button class="stamp-btn" data-stamp="🍒">🍒</button>
+            <button class="stamp-btn" data-stamp="👑">👑</button>
+            <button class="stamp-btn" data-stamp="💌">💌</button>
+            <button class="stamp-btn" data-stamp="⚡">⚡</button>
+            <button class="stamp-btn" data-stamp="🧁">🧁</button>
+            <button class="stamp-btn" data-stamp="🍀">🍀</button>
+            <button class="stamp-btn" data-stamp="🌙">🌙</button>
+          </div>
+          <p class="help-text">Tip: Klik foto pada hasil preview untuk melakukan <strong>Retake</strong> pada foto tertentu!</p>
+        </div>
+
+        <!-- Render Target Canvas -->
+        <div class="canvas-wrapper">
+          <canvas id="strip-canvas"></canvas>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons hidden" id="action-buttons">
+          <button id="btn-download" class="cute-btn success download-btn">
+            💾 Save HD Strip
+          </button>
+          <button id="btn-gif" class="cute-btn gif-btn">
+            🎬 Download Animated GIF
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal Pop-up Retake Per Foto -->
+    <div id="retake-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <h3>🔄 Retake This Photo?</h3>
+        <p>Klik tombol di bawah untuk mengambil ulang foto ini.</p>
+        <div class="modal-buttons">
+          <button id="btn-confirm-retake" class="cute-btn primary">Ya, Retake Foto Ini</button>
+          <button id="btn-cancel-retake" class="cute-btn secondary">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Web Footer dengan Watermark Gege's Lab -->
+    <footer class="studio-footer">
+      <p>Crafted with 💖 by <strong>Gege's Lab</strong> © 2026</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
