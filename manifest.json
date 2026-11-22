@@ -1,0 +1,11 @@
+{
+  "name": "SNAPPOP! Photobooth",
+  "short_name": "SNAPPOP!",
+  "description": "Photobooth lucu untuk membuat dan menyimpan strip foto.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF4EC",
+  "theme_color": "#FF6FA3",
+  "orientation": "portrait-primary"
+}

@@ -1,168 +1,154 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SNAPPOP! ⚡ Studio by Gege's Lab</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Library GIF Generator -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.3.2/gifshot.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FF6FA3">
+<meta name="description" content="SNAPPOP! photobooth lucu untuk mengambil, mendesain, dan menyimpan strip foto langsung di browser.">
+<title>SNAPPOP! ⚡ Studio by Gege's Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.3.2/gifshot.min.js"></script>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+<canvas id="bg-canvas"></canvas>
+<div class="cloud">☁️</div><div class="cloud">☁️</div>
 
-  <!-- Canvas Background Bergerak (Doodle Monokrom) -->
-  <canvas id="bg-canvas"></canvas>
+<div class="app">
+  <header>
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme"><span id="theme-icon">🌙</span></button>
+    <div class="logo" id="logo"></div>
+    <br><p class="subtitle">Serve your best chaos ★</p>
+  </header>
 
-  <div class="app-container">
-    <!-- Funky Header dengan Dark Mode Toggle -->
-    <header class="studio-header">
-      <div class="header-top">
-        <div class="logo">SNAPPOP! <span>⚡</span></div>
-        <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
-          <span id="theme-icon">🌙</span>
-        </button>
+  <main class="workspace">
+    <div class="left">
+    <section class="card">
+      <div class="camera-stage">
+        <video id="webcam" autoplay playsinline muted></video>
+        <div id="camera-error" class="camera-error hidden">
+          <b>📷 Kamera belum aktif</b>
+          <span>Izinkan akses kamera, lalu muat ulang halaman.</span>
+          <button id="btn-camera-retry" class="btn mini" type="button">Coba Lagi</button>
+        </div>
+        <canvas id="warp-canvas" class="hidden" width="320" height="240"></canvas>
+        <span class="cam-deco" style="top:10px;left:14px">✨</span>
+        <span class="cam-deco" style="top:12px;right:16px;animation-delay:.7s">💖</span>
+        <span class="cam-deco" style="bottom:36px;left:16px;animation-delay:1.2s">⭐</span>
+        <div id="countdown-layer" class="countdown-overlay hidden"><span>3</span></div>
+        <div class="flash-overlay" id="flash"></div>
+        <div class="progress" id="progress"></div>
       </div>
-      <p class="subtitle">Serve your best chaos ★</p>
-    </header>
 
-    <main class="studio-workspace">
-      <!-- Live Camera Viewport -->
-      <section class="viewport-card">
-        <div class="camera-stage">
-          <video id="webcam" autoplay playsinline muted></video>
-          <div id="countdown-layer" class="countdown-overlay hidden">3</div>
-          <div class="flash-overlay" id="flash"></div>
-        </div>
-
-        <!-- Setting Jumlah Foto & Tombol Snap -->
-        <div class="pose-selector-row">
-          <label>Photo Count:</label>
-          <div class="pose-pills">
-            <button class="pose-btn" data-poses="2">2 Poses</button>
-            <button class="pose-btn active" data-poses="4">4 Poses</button>
-            <button class="pose-btn" data-poses="6">6 Poses</button>
-          </div>
-        </div>
-
-        <div class="controls-toolbar">
-          <button id="btn-snap" class="cute-btn primary">
-            <span id="snap-btn-text">✨ Take Photos (4x)</span>
-          </button>
-          <button id="btn-retake" class="cute-btn secondary">
-            <span>🔄</span> Clear All
-          </button>
-        </div>
-      </section>
-
-      <!-- Customization & Strip Preview -->
-      <section class="customization-card">
-        <h3>Design Your Photo Strip</h3>
-        
-        <!-- Layout Options -->
-        <div class="setting-group">
-          <label>Frame Layout</label>
-          <div class="layout-pills">
-            <button class="pill-btn active" data-layout="vertical">Strip</button>
-            <button class="pill-btn" data-layout="grid">Grid (2 Col)</button>
-            <button class="pill-btn" data-layout="polaroid">Wide Polaroid</button>
-          </div>
-        </div>
-
-        <!-- 8 Filter Options -->
-        <div class="setting-group">
-          <label>Choose Filter (8 Preset)</label>
-          <div class="filter-pills">
-            <button class="pill-btn active" data-filter="none">Normal</button>
-            <button class="pill-btn" data-filter="grayscale(100%) brightness(105%)">Soft B&W</button>
-            <button class="pill-btn" data-filter="sepia(40%) saturate(140%) contrast(95%)">Warm Vintage</button>
-            <button class="pill-btn" data-filter="contrast(110%) brightness(115%) saturate(130%)">Peach Pop</button>
-            <button class="pill-btn" data-filter="hue-rotate(280deg) saturate(180%) contrast(110%)">Dreamy Pink</button>
-            <button class="pill-btn" data-filter="hue-rotate(170deg) contrast(120%) brightness(110%)">Cyber Neon</button>
-            <button class="pill-btn" data-filter="contrast(140%) sepia(30%) hue-rotate(-20deg)">Retro Chrome</button>
-            <button class="pill-btn" data-filter="grayscale(100%) contrast(160%) brightness(85%)">Moody Noir</button>
-          </div>
-        </div>
-
-        <!-- Expanded Frame Colors (12 Options) -->
-        <div class="setting-group">
-          <label>Frame Color & Themes</label>
-          <div class="color-picker-row">
-            <button class="color-dot active" data-color="#ffffff" style="background: #ffffff;" title="Classic White"></button>
-            <button class="color-dot" data-color="#FFD6E5" style="background: #FFD6E5;" title="Baby Pink"></button>
-            <button class="color-dot" data-color="#D7F9F1" style="background: #D7F9F1;" title="Mint Green"></button>
-            <button class="color-dot" data-color="#FFF5BA" style="background: #FFF5BA;" title="Butter Yellow"></button>
-            <button class="color-dot" data-color="#E2D4F9" style="background: #E2D4F9;" title="Soft Lavender"></button>
-            <button class="color-dot" data-color="#FFC2A1" style="background: #FFC2A1;" title="Peach Sorbet"></button>
-            <button class="color-dot" data-color="#B8E1FF" style="background: #B8E1FF;" title="Sky Blue"></button>
-            <button class="color-dot" data-color="#FF94B9" style="background: #FF94B9;" title="Hot Pink"></button>
-            <button class="color-dot" data-color="#6C5CE7" style="background: #6C5CE7;" title="Electric Purple"></button>
-            <button class="color-dot" data-color="#70A1FF" style="background: #70A1FF;" title="Periwinkle"></button>
-            <button class="color-dot" data-color="#4A5568" style="background: #4A5568;" title="Slate Gray"></button>
-            <button class="color-dot" data-color="#2D2B30" style="background: #2D2B30;" title="Midnight Dark"></button>
-          </div>
-        </div>
-
-        <!-- Stamp Selection -->
-        <div class="setting-group">
-          <label>Add Stamp / Icon (Click to place, Drag to move)</label>
-          <div class="stamp-pills">
-            <button class="stamp-btn" data-stamp="💖">💖</button>
-            <button class="stamp-btn" data-stamp="🎀">🎀</button>
-            <button class="stamp-btn" data-stamp="🧸">🧸</button>
-            <button class="stamp-btn" data-stamp="🌸">🌸</button>
-            <button class="stamp-btn" data-stamp="✨">✨</button>
-            <button class="stamp-btn" data-stamp="🐱">🐱</button>
-            <button class="stamp-btn" data-stamp="⭐">⭐</button>
-            <button class="stamp-btn" data-stamp="🍒">🍒</button>
-            <button class="stamp-btn" data-stamp="👑">👑</button>
-            <button class="stamp-btn" data-stamp="💌">💌</button>
-            <button class="stamp-btn" data-stamp="⚡">⚡</button>
-            <button class="stamp-btn" data-stamp="🧁">🧁</button>
-            <button class="stamp-btn" data-stamp="🍀">🍀</button>
-            <button class="stamp-btn" data-stamp="🌙">🌙</button>
-          </div>
-          <p class="help-text">Tip: Klik foto pada hasil preview untuk melakukan <strong>Retake</strong> pada foto tertentu!</p>
-        </div>
-
-        <!-- Render Target Canvas -->
-        <div class="canvas-wrapper">
-          <canvas id="strip-canvas"></canvas>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons hidden" id="action-buttons">
-          <button id="btn-download" class="cute-btn success download-btn">
-            💾 Save HD Strip
-          </button>
-          <button id="btn-gif" class="cute-btn gif-btn">
-            🎬 Download Animated GIF
-          </button>
-        </div>
-      </section>
-    </main>
-
-    <!-- Modal Pop-up Retake Per Foto -->
-    <div id="retake-modal" class="modal-overlay hidden">
-      <div class="modal-card">
-        <h3>🔄 Retake This Photo?</h3>
-        <p>Klik tombol di bawah untuk mengambil ulang foto ini.</p>
-        <div class="modal-buttons">
-          <button id="btn-confirm-retake" class="cute-btn primary">Ya, Retake Foto Ini</button>
-          <button id="btn-cancel-retake" class="cute-btn secondary">Batal</button>
+      <div class="row">
+        <label>Photo Count:</label>
+        <div class="pills pose-pills">
+          <button class="pill pose-btn" data-poses="2">2 Poses</button>
+          <button class="pill pose-btn active" data-poses="4">4 Poses</button>
+          <button class="pill pose-btn" data-poses="6">6 Poses</button>
+          <button class="pill pose-btn" data-poses="8">8 Poses</button>
         </div>
       </div>
+      <div class="row" style="margin-top:12px">
+        <label>Timer:</label>
+        <div class="pills timer-pills">
+          <button class="pill timer-btn" data-sec="3">3s</button>
+          <button class="pill timer-btn" data-sec="5">5s</button>
+          <button class="pill timer-btn" data-sec="10">10s</button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button id="btn-snap" class="btn primary"><span id="snap-btn-text">✨ Take Photos (4x)</span></button>
+        <button id="btn-retake" class="btn">🔄 Clear All</button>
+      </div>
+    </section>
+
+    <section class="card vinyl-card">
+      <div class="turntable">
+        <span class="hint">tap me! ♪</span>
+        <button id="vinyl" class="vinyl" aria-label="Play / pause lofi"><span class="label"><b>⚡</b></span></button>
+        <div class="tonearm" id="tonearm"></div>
+      </div>
+      <div class="player-info">
+        <h3>Gege's Lo-fi Corner 🎧</h3>
+        <p id="track-name">Pencet vinyl-nya buat mulai lagu lofi ♪</p>
+        <div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="pills player-controls">
+          <button class="pill mini" id="btn-prev" aria-label="Previous">⏮</button>
+          <button class="pill mini" id="btn-play" aria-label="Play or pause">▶</button>
+          <button class="pill mini" id="btn-next" aria-label="Next">⏭</button>
+          <input type="range" id="vol" min="0" max="1" step="0.05" value="0.7" aria-label="Volume">
+        </div>
+      </div>
+    </section>
     </div>
 
-    <!-- Web Footer dengan Watermark Gege's Lab -->
-    <footer class="studio-footer">
-      <p>Crafted with 💖 by <strong>Gege's Lab</strong> © 2026</p>
-    </footer>
+    <section class="card">
+      <h3>Design Your Photo Strip 🎨</h3>
+
+      <label class="t">Frame Layout</label>
+      <div class="pills layout-pills">
+        <button class="pill active" data-layout="vertical">Strip</button>
+        <button class="pill" data-layout="grid">Grid (2 Col)</button>
+        <button class="pill" data-layout="polaroid">Wide Polaroid</button>
+      </div>
+
+      <label class="t" id="filter-label">Choose Filter</label>
+      <div class="pills filter-pills" id="filters-cute"></div>
+      <label class="t">😝 Ugly Face Filters (lucu-lucuan!)</label>
+      <div class="pills filter-pills" id="filters-ugly"></div>
+
+      <label class="t">Frame Color &amp; Themes</label>
+      <div class="pills color-picker-row" id="colors"></div>
+      <p class="sub">🌈 Gradient frames</p>
+      <div class="pills color-picker-row" id="grads"></div>
+
+      <label class="t">Add Stamp / Icon (click to place, drag to move)</label>
+      <div class="pills" id="stamp-tabs" style="margin-bottom:10px"></div>
+      <div class="pills stamp-pills" id="stamps"></div>
+      <div class="pills" style="margin-top:12px">
+        <button id="btn-undo" class="pill mini">↩️ Undo stamp</button>
+        <button id="btn-clear-stamps" class="pill mini">🧹 Clear stamps</button>
+        <button id="btn-bigger" class="pill mini">➕ Bigger</button>
+        <button id="btn-smaller" class="pill mini">➖ Smaller</button>
+      </div>
+      <p class="help">💡 Klik foto pada hasil preview untuk <strong>Retake</strong> foto tertentu. "Bigger/Smaller" mengubah stamp terakhir.</p>
+
+      <div class="canvas-wrapper">
+        <div class="empty" id="empty"><b>📸</b>Strip kamu bakal muncul di sini!</div>
+        <canvas id="strip-canvas" class="hidden" tabindex="0" aria-label="Hasil strip foto. Klik foto untuk retake."></canvas>
+      </div>
+
+      <div class="toolbar hidden" id="action-buttons">
+        <button id="btn-download" class="btn success">💾 Save HD Strip</button>
+        <button id="btn-share" class="btn share">📤 Share</button>
+        <button id="btn-anim-gif" class="btn anim">✨ Animated Strip (GIF)</button>
+        <button id="btn-gif" class="btn gif">🎞️ Photo Flipbook GIF</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="retake-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3>🔄 Retake This Photo?</h3>
+      <p>Klik tombol di bawah untuk mengambil ulang foto ini.</p>
+      <div class="modal-buttons">
+        <button id="btn-confirm-retake" class="btn primary">Ya, Retake Foto Ini</button>
+        <button id="btn-cancel-retake" class="btn">Batal</button>
+      </div>
+    </div>
   </div>
 
-  <script src="app.js"></script>
+  <footer>
+    <span>🔒</span> Foto diproses di browser dan tidak disimpan ke server
+    <br>Crafted with <span>💖</span> by <strong>Gege's Lab</strong> © 2026
+  </footer>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
